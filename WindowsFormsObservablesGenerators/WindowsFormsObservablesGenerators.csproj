@@ -35,8 +35,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TypeToObservablesGenerator.cs" />
     <Compile Include="EventAsObservableGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextIndentAdder.cs" />
+    <Compile Include="TypeCollectionToObservableGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
