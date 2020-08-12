@@ -11,26 +11,24 @@ namespace WindowsFormsObservablesGenerators
         {
             var lookup = types.ToLookup(type => type.Namespace);
             var strings = lookup.Select(
-                grouping =>
-                {
-                    var namespaceText = grouping.Key;
-                    var classText =
-                        grouping.Where(type => type.GetEvents(BindingFlags.Instance | BindingFlags.Public).Any())
-                            .Select(TypeToObservablesGenerator.Generate)
-                            .Where(s => s != "").ToList();
-                    if (classText.Any())
+                    grouping =>
                     {
-                        var list = string.Join("\r\n", classText);
+                        var namespaceText = grouping.Key;
+                        var codeForTypes = grouping.Select(TypeToObservablesGenerator.Generate).Where(s => s != "")
+                            .ToList();
+                        if (!codeForTypes.Any())
+                        {
+                            return "";
+                        }
+
+                        var list = string.Join("\r\n", codeForTypes);
                         var text = $@"namespace Observables.{namespaceText}
 {{
 {TextIndentAdder.Indent(list, 4)}          
 }}";
                         return text;
-                    }
-
-                    return "";
-                })
-                .Where(s => s!="")
+                    })
+                .Where(s => s != "")
                 .ToArray();
             return string.Join("\r\n", strings);
         }

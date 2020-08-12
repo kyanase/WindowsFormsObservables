@@ -20,7 +20,9 @@ namespace WindowsFormsObservablesGenerators.Tests
     {
         public static IObservable<EventPattern<EventArgs>> SampleEventAsObservable(this SampleClass @this)
         {
-            return Observable.FromEventPattern<EventHandler, EventArgs>(h => @this.SampleEvent += h, h => @this.SampleEvent -= h);
+            return Observable.FromEventPattern<EventHandler, EventArgs>(
+                h => @this.SampleEvent += h, 
+                h => @this.SampleEvent -= h);
         }
     }          
 }";

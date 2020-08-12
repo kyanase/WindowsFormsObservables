@@ -12,16 +12,36 @@ namespace WindowsFormsObservablesGenerators
     {
         public static string GenerateExtensionMethodOfEvent(EventInfo eventInfo)
         {
-            var memberInfo = eventInfo.EventHandlerType.GetMethod("Invoke");
-            var parameterInfos = memberInfo?.GetParameters() ?? new ParameterInfo[0];
-            var parameterInfo = parameterInfos[1];
-            var parameterTypeName = ToGenericAwareTypeName(parameterInfo.ParameterType);
+            var parameterTypeName = GetParameterTypeName(eventInfo);
             Debug.Assert(eventInfo.DeclaringType != null, "eventInfo.DeclaringType != null");
             var genericAwareTypeName = ToGenericAwareTypeName(eventInfo.EventHandlerType);
             return $@"public static IObservable<EventPattern<{parameterTypeName}>> {eventInfo.Name}AsObservable(this {ToGenericAwareTypeName(eventInfo.DeclaringType)} @this)
 {{
-    return Observable.FromEventPattern<{genericAwareTypeName}, {parameterTypeName}>(h => @this.{eventInfo.Name} += h, h => @this.{eventInfo.Name} -= h);
+    return Observable.FromEventPattern<{genericAwareTypeName}, {parameterTypeName}>(
+        h => @this.{eventInfo.Name} += h, 
+        h => @this.{eventInfo.Name} -= h);
 }}";
+        }
+
+        public static string GenerateExtensionMethodOfStaticEvent(EventInfo eventInfo)
+        {
+            var parameterTypeName = GetParameterTypeName(eventInfo); Debug.Assert(eventInfo.DeclaringType != null, "eventInfo.DeclaringType != null");
+            var genericAwareTypeName = ToGenericAwareTypeName(eventInfo.EventHandlerType);
+            return $@"public static IObservable<EventPattern<{parameterTypeName}>> {eventInfo.Name}AsObservable()
+{{
+    return Observable.FromEventPattern<{genericAwareTypeName}, {parameterTypeName}>(
+        h => {ToGenericAwareTypeName(eventInfo.DeclaringType)}.{eventInfo.Name} += h, 
+        h => {ToGenericAwareTypeName(eventInfo.DeclaringType)}.{eventInfo.Name} -= h);
+}}";
+        }
+
+        private static string GetParameterTypeName(EventInfo eventInfo)
+        {
+            var memberInfo = eventInfo.EventHandlerType.GetMethod("Invoke");
+            var parameterInfos = memberInfo?.GetParameters() ?? new ParameterInfo[0];
+            var parameterInfo = parameterInfos[1];
+            var parameterTypeName = ToGenericAwareTypeName(parameterInfo.ParameterType);
+            return parameterTypeName;
         }
 
         private static string ToGenericAwareTypeName(Type eventInfoEventHandlerType)
@@ -31,8 +51,8 @@ namespace WindowsFormsObservablesGenerators
             {
                 return ToName(eventInfoEventHandlerType);
             }
-            var eventTypeName = Regex.Replace(eventInfoEventHandlerType.Name, "`.*$","");
-            return eventTypeName + "<" + string.Join(", ", genericArguments.Select(ToGenericAwareTypeName)) +">";
+            var eventTypeName = Regex.Replace(eventInfoEventHandlerType.Name, "`.*$", "");
+            return eventTypeName + "<" + string.Join(", ", genericArguments.Select(ToGenericAwareTypeName)) + ">";
         }
 
         private static string ToName(Type type)

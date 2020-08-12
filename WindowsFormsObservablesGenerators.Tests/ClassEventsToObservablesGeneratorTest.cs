@@ -17,15 +17,27 @@ namespace WindowsFormsObservablesGenerators.Tests
 {
     public static IObservable<EventPattern<EventArgs>> SampleEventAsObservable(this SampleClass @this)
     {
-        return Observable.FromEventPattern<EventHandler, EventArgs>(h => @this.SampleEvent += h, h => @this.SampleEvent -= h);
+        return Observable.FromEventPattern<EventHandler, EventArgs>(
+            h => @this.SampleEvent += h, 
+            h => @this.SampleEvent -= h);
     }
     public static IObservable<EventPattern<int>> SampleGenericEventAsObservable(this SampleClass @this)
     {
-        return Observable.FromEventPattern<EventHandler<int>, int>(h => @this.SampleGenericEvent += h, h => @this.SampleGenericEvent -= h);
+        return Observable.FromEventPattern<EventHandler<int>, int>(
+            h => @this.SampleGenericEvent += h, 
+            h => @this.SampleGenericEvent -= h);
     }
     public static IObservable<EventPattern<List<int>>> SampleGenericGenericEventAsObservable(this SampleClass @this)
     {
-        return Observable.FromEventPattern<EventHandler<List<int>>, List<int>>(h => @this.SampleGenericGenericEvent += h, h => @this.SampleGenericGenericEvent -= h);
+        return Observable.FromEventPattern<EventHandler<List<int>>, List<int>>(
+            h => @this.SampleGenericGenericEvent += h, 
+            h => @this.SampleGenericGenericEvent -= h);
+    }
+    public static IObservable<EventPattern<EventArgs>> StaticEventAsObservable()
+    {
+        return Observable.FromEventPattern<EventHandler, EventArgs>(
+            h => SampleClass.StaticEvent += h, 
+            h => SampleClass.StaticEvent -= h);
     }
 }";
             Assert.AreEqual(expected, generate);
@@ -38,6 +50,7 @@ namespace WindowsFormsObservablesGenerators.Tests
             public event EventHandler<int> SampleGenericEvent;
             public event EventHandler<List<int>> SampleGenericGenericEvent;
             private event EventHandler PrivateEvent;
+            public static event EventHandler StaticEvent;
         }
     }
 }

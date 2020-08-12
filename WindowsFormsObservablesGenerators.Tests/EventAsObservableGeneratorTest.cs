@@ -15,7 +15,9 @@ namespace WindowsFormsObservablesGenerators.Tests
             string expectedCode =
                 @"public static IObservable<EventPattern<EventArgs>> ClickAsObservable(this SampleClass @this)
 {
-    return Observable.FromEventPattern<EventHandler, EventArgs>(h => @this.Click += h, h => @this.Click -= h);
+    return Observable.FromEventPattern<EventHandler, EventArgs>(
+        h => @this.Click += h, 
+        h => @this.Click -= h);
 }";
             Assert.AreEqual(expectedCode, code);
         }
@@ -27,7 +29,9 @@ namespace WindowsFormsObservablesGenerators.Tests
             string expectedCode =
                 @"public static IObservable<EventPattern<int>> GenericPrimitiveEventAsObservable(this SampleClass @this)
 {
-    return Observable.FromEventPattern<EventHandler<int>, int>(h => @this.GenericPrimitiveEvent += h, h => @this.GenericPrimitiveEvent -= h);
+    return Observable.FromEventPattern<EventHandler<int>, int>(
+        h => @this.GenericPrimitiveEvent += h, 
+        h => @this.GenericPrimitiveEvent -= h);
 }";
             Assert.AreEqual(expectedCode, code);
         }
