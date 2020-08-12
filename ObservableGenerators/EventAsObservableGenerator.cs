@@ -1,12 +1,11 @@
 ﻿using System;
-using System.CodeDom;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.CSharp;
 
-namespace WindowsFormsObservablesGenerators
+namespace ObservableGenerators
 {
     public static class EventAsObservableGenerator
     {
@@ -55,14 +54,31 @@ namespace WindowsFormsObservablesGenerators
             return eventTypeName + "<" + string.Join(", ", genericArguments.Select(ToGenericAwareTypeName)) + ">";
         }
 
+        private static readonly IDictionary<Type, string> PrimitiveTypeToNameDictionary = new Dictionary<Type, string>()
+        {
+            [typeof(bool)] = "bool",
+            [typeof(byte)] = "byte",
+            [typeof(char)] = "char",
+            [typeof(decimal)] = "decimal",
+            [typeof(double)] = "double",
+            [typeof(float)] = "float",
+            [typeof(int)] = "int",
+            [typeof(long)] = "long",
+            [typeof(object)] = "object",
+            [typeof(sbyte)] = "sbyte",
+            [typeof(short)] = "short",
+            [typeof(string)] = "string",
+            [typeof(uint)] = "uint",
+            [typeof(ulong)] = "ulong",
+            [typeof(ushort)] = "ushort",
+            [typeof(void)] = "void"
+        };
         private static string ToName(Type type)
         {
-            if (type.IsPrimitive)
+            if (PrimitiveTypeToNameDictionary.ContainsKey(type))
             {
-                var compiler = new CSharpCodeProvider();
-                return compiler.GetTypeOutput(new CodeTypeReference(type));
+                return PrimitiveTypeToNameDictionary[type];
             }
-
             return type.Name;
         }
     }

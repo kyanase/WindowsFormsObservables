@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Reflection;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
-namespace WindowsFormsObservablesGenerators.Tests
+namespace ObservableGenerators.Tests
 {
     public class TypeCollectionToObservableGeneratorTest
     {
@@ -14,7 +13,7 @@ namespace WindowsFormsObservablesGenerators.Tests
             var actual = TypeCollectionToObservableGenerator.Generate(types);
             Console.WriteLine(actual);
             var expected =
-                @"namespace Observables.WindowsFormsObservablesGenerators.Tests
+                @"namespace Observables.ObservableGenerators.Tests
 {
     public static class SampleClassObservableExtensions
     {
@@ -32,10 +31,12 @@ namespace WindowsFormsObservablesGenerators.Tests
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+#pragma warning disable 67
         private class SampleClass
         {
             public event EventHandler SampleEvent;
         }
+#pragma warning restore 67
 
         [Test]
         public void GenerateForEmptyArray()

@@ -1,9 +1,9 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
 using JetBrains.Annotations;
+using NUnit.Framework;
 
-namespace WindowsFormsObservablesGenerators.Tests
+namespace ObservableGenerators.Tests
 {
     public class EventAsObservableGeneratorTest
     {
@@ -37,10 +37,12 @@ namespace WindowsFormsObservablesGenerators.Tests
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+#pragma warning disable 67
         private class SampleClass
         {
             public event EventHandler Click;
             public event EventHandler<int> GenericPrimitiveEvent;
         }
+#pragma warning restore 67
     }
 }

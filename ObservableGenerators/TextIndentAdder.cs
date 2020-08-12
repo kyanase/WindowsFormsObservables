@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace WindowsFormsObservablesGenerators
+namespace ObservableGenerators
 {
     internal static class TextIndentAdder
     {

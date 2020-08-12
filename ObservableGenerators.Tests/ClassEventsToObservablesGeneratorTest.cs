@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
-namespace WindowsFormsObservablesGenerators.Tests
+namespace ObservableGenerators.Tests
 {
     internal class ClassEventsToObservablesGeneratorTest
     {
@@ -44,6 +44,7 @@ namespace WindowsFormsObservablesGenerators.Tests
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+#pragma warning disable 67
         private class SampleClass
         {
             public event EventHandler SampleEvent;
@@ -52,5 +53,6 @@ namespace WindowsFormsObservablesGenerators.Tests
             private event EventHandler PrivateEvent;
             public static event EventHandler StaticEvent;
         }
+#pragma warning restore 67
     }
 }
